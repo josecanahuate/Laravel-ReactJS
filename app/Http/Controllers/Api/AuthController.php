@@ -6,9 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Auth;
-
 
 class AuthController extends Controller
 {
@@ -34,7 +32,7 @@ class AuthController extends Controller
         $input["password"] = bcrypt($input['password']);
 
         $user = User::create($input);
-        $user->assignRole('admin'); // Se le asigna el rol
+        $user->assignRole('client'); // Se le asigna el rol
 
         $user->save(); // Add this line
         
@@ -44,49 +42,33 @@ class AuthController extends Controller
 
     // LOGIN
     public function login(Request $request)
-    {
-        $response = ["success" => false];
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
-        // Validación
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        $credentials = request([ 'email', 'password' ]);
-        if (!auth()->attempt($credentials)){
-            return response()->json([
-                'message' => 'Unauthorized',
-                'error' => [
-                    'password' => [
-                        'Invalid Credentials'
-                    ]
-                ]
-                    ], 422);
-        }   
-        
-       $user = User::where('email', $request->email)->first();
-        $authToken = $user->createToken('auth-token')->plainTextToken;
-        $response['message'] = "Logged in";
+    if (Auth::attempt($request->only('email', 'password'))) {
+        $user = Auth::user();
+        $token = $user->createToken('authToken')->plainTextToken;
+        $role = $user->role;
 
         return response()->json([
-            'access_token' => $authToken,
-            'message' => $response['message']
+            'user' => $user,
+            'token' => $token,
+            'role' => $role,
+            'success' => true,
         ]);
     }
 
-    //LOGOUT
-/*     public function logout(){
-        // Revoke all tokens...
-        $response=["success"=>false];
-        auth()->user->tokens()->delete();
-        $response=[
-            "success"=>true,
-            "message"=>"Sesion cerrada"
-        ];
-        return response()->json($response, 200);
-    } */
+    return response()->json([
+        'message' => 'Credenciales incorrectas',
+        'success' => false,
+    ], 401);
+}
 
+
+    //LOGOUT
     public function logout()
     {
         $response = ["success" => false];
@@ -100,10 +82,6 @@ class AuthController extends Controller
             "success" => true,
             "message" => "Sesión cerrada"
         ];
-    
         return response()->json($response, 200);
     }
-
-
-
 }

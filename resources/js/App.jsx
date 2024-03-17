@@ -1,5 +1,4 @@
 import React from 'react';
-/* import ReactDOM from 'react-dom';*/
 import ReactDOM from 'react-dom/client';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -20,32 +19,39 @@ import Panel from './pageadmin/PanelAdmin';
 import PanelAdmin from './pageadmin/PanelAdmin';
 import PanelClient from './pageclient/PanelClient';
 
+//ADMIN
+import UserAll from './pageadmin/UserAll';
+import UserUpdate from './pageadmin/UserUpdate';
+
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        {/* Rutas públicas */}
-        <Route path="/" element={<LayoutPublic />}>
-          <Route index element={<PageHome />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Route>
+      <Router>
+          <Routes>
+              {/* Rutas públicas */}
+              <Route path="/" element={<LayoutPublic />}>
+                  <Route index element={<PageHome />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+              </Route>
 
-        {/* Rutas protegidas */}
-        <Route element={<ProtectedRoutes />}>
-          {/* Rutas para el área de administrador */}
-          <Route path="/admin" element={<LayoutAdmin />}>
-            <Route index element={<PanelAdmin />} />
-          </Route>
+              {/* Rutas protegidas */}
+              <Route element={<ProtectedRoutes />}>
+                  {/* Rutas para el área de administrador */}
+                  <Route path="/admin" element={<LayoutAdmin />}>
+                      <Route index element={<PanelAdmin />} />
+                      <Route path="user" element={<UserAll />} />{" "}
+                      <Route path="user/edit/:id" element={<UserUpdate />} />
+                      {/* Ruta relativa */}
+                  </Route>
 
-
-        {/* Rutas para clientes */}
-        <Route path="/client" element={<LayoutClient />}>
-          <Route index element={<PanelClient />} />
-        </Route>
-        </Route>
-      </Routes>
-    </Router>
+                  {/* Rutas para clientes */}
+                  <Route path="/client" element={<LayoutClient />}>
+                      <Route index element={<PageHome />} />
+                      <Route index element={<PanelClient />} />
+                  </Route>
+              </Route>
+          </Routes>
+      </Router>
   );
 };
 
@@ -55,8 +61,6 @@ if (document.getElementById('root')) {
   const Index = ReactDOM.createRoot(document.getElementById('root'));
 
   Index.render(
-    <React.StrictMode>
       <App />
-    </React.StrictMode>
   );
 }

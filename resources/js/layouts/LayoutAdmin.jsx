@@ -16,7 +16,6 @@ useEffect(()=>{
 
   return (
     <div>
-    <h1>Page Home Admin</h1>
       <Navbar/>
       <Outlet/>
       <Footer/>

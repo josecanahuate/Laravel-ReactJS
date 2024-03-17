@@ -10,9 +10,13 @@ class UserController extends Controller
 {
     //listado de usuarios
     public function index(){
-        /* $data = User::all(); */
-        $data = User::all(['id','name', 'email']); //para que muestre solo estos campos
+        $data = User::whereHas('roles', function($q) {
+            $q->where("name", "client");
+        })->get(["id","name"]); 
         return response()->json($data, 200);
+    }
+
+    public function store(Request $request){
     }
 
     public function show($id){

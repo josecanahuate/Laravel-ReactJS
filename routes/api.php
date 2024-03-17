@@ -9,7 +9,6 @@ use App\Http\Controllers\Api\FrontController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
 //grupo de rutas con prefix v1
 Route::prefix('v1')->group(function () {
 
@@ -23,9 +22,7 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 
     //extraer menu
 
-
     //entrar a un grupo de empresas mediante categoria
-
 
     //RUTAS PRIVADAS SI NECESITAN AUTORIZACION se hace referencia a SANCTUM (TOKEN)
 Route::group(['middleware' => 'auth:sanctum' ], function () {
@@ -39,12 +36,7 @@ Route::group(['middleware' => 'auth:sanctum' ], function () {
     Route::apiResource('/admin/user', UserController::class); //Controller User ADMIN
     Route::apiResource('/admin/categoria', CategoriaController::class); //Controller Categoria ADMIN
     Route::apiResource('/admin/empresa', EmpresaController::class); //Controller ADMIN
-
-
-
-
 });
-
 
 }); 
 
@@ -53,11 +45,6 @@ Route::group(['middleware' => 'auth:sanctum' ], function () {
 }); 
  */
 
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-
-
-
